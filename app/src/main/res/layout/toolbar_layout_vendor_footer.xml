@@ -254,7 +254,7 @@
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="5dp"
                 android:fontFamily="@font/futuramediumbt"
-                android:text="@string/community"
+                android:text="@string/Profile"
                 android:textColor="@color/text_color"
                 android:textSize="10sp"
                 tools:ignore="HardcodedText" />

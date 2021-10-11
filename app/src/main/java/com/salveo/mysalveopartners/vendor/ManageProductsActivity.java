@@ -51,10 +51,10 @@ import com.salveo.mysalveopartners.utils.ConnectionDetector;
 import com.salveo.mysalveopartners.utils.RestUtils;
 import com.wang.avi.AVLoadingIndicatorView;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
@@ -106,6 +106,10 @@ public class ManageProductsActivity extends AppCompatActivity implements View.On
     FloatingActionButton add_deal_fab;
 
     @SuppressLint("NonConstantResourceId")
+    @BindView(R.id.add_deal_text)
+    TextView add_deal_text;
+
+    @SuppressLint("NonConstantResourceId")
     @BindView(R.id.fab_add_deal)
     FloatingActionButton fab_add_deal;
 
@@ -122,7 +126,7 @@ public class ManageProductsActivity extends AppCompatActivity implements View.On
     TextView txt_discard_deal;
 
 
-   @SuppressLint("NonConstantResourceId")
+    @SuppressLint("NonConstantResourceId")
     @BindView(R.id.ll_add_deal)
     LinearLayout ll_add_deal;
 
@@ -191,7 +195,7 @@ public class ManageProductsActivity extends AppCompatActivity implements View.On
     private String getfromdate = "";
     private String gettodate = "";
 
-     boolean isvaliddate = false;
+    boolean isvaliddate = false;
     AlertDialog alertDialog;
 
     List<String> _id = new ArrayList<>();
@@ -226,7 +230,7 @@ public class ManageProductsActivity extends AppCompatActivity implements View.On
         title_community.setTextColor(getResources().getColor(R.color.darker_grey_new,getTheme()));
         img_community.setImageResource(R.drawable.grey_community);
         title_shop.setTextColor(getResources().getColor(R.color.new_gree_color,getTheme()));
-        img_shop.setImageResource(R.drawable.green_shop_selector);
+        img_shop.setImageResource(R.drawable.shop_blue);
 
         rl_home.setOnClickListener(this);
 
@@ -268,7 +272,7 @@ public class ManageProductsActivity extends AppCompatActivity implements View.On
                     @Override
                     public void onRefresh() {
                         if (new ConnectionDetector(getApplicationContext()).isNetworkAvailable(getApplicationContext())) {
-                              getlist_from_vendor_id_ResponseCall();
+                            getlist_from_vendor_id_ResponseCall();
 
                         }
 
@@ -302,73 +306,76 @@ public class ManageProductsActivity extends AppCompatActivity implements View.On
         isAllFabsVisible = false;
         isAddDealFabsVisible = false;
         add_deal_fab.setOnClickListener(new View.OnClickListener() {
-                    @SuppressLint({"UseCompatLoadingForDrawables", "ObsoleteSdkInt"})
-                    @Override
-                    public void onClick(View view) {
-                        if (!isAllFabsVisible) {
-                            fab_add_deal.show();
-                            fab_discard_deal.show();
-                            txt_add_deal.setVisibility(View.VISIBLE);
-                            txt_discard_deal.setVisibility(View.VISIBLE);
-                            isAllFabsVisible = true;
-                            add_deal_fab.setImageResource(R.drawable.ic_baseline_close_white24);
+            @SuppressLint({"UseCompatLoadingForDrawables", "ObsoleteSdkInt", "SetTextI18n"})
+            @Override
+            public void onClick(View view) {
+                if (!isAllFabsVisible) {
+                    fab_add_deal.show();
+                    fab_discard_deal.show();
+                    txt_add_deal.setVisibility(View.VISIBLE);
+                    txt_discard_deal.setVisibility(View.VISIBLE);
+                    isAllFabsVisible = true;
+                    add_deal_text.setText("Close");
+                    add_deal_fab.setImageResource(R.drawable.new_remove);
 
-                        } else {
-                            fab_add_deal.hide();
-                            fab_discard_deal.hide();
-                            txt_add_deal.setVisibility(View.GONE);
-                            txt_discard_deal.setVisibility(View.GONE);
-                            isAllFabsVisible = false;
-                            add_deal_fab.setImageResource(R.drawable.ic_baseline_add_24);
-                            showCheckbox = false;
-                            setView();
+                } else {
+                    fab_add_deal.hide();
+                    fab_discard_deal.hide();
+                    txt_add_deal.setVisibility(View.GONE);
+                    txt_discard_deal.setVisibility(View.GONE);
+                    add_deal_text.setText("Add Deal");
+                    isAllFabsVisible = false;
+                    add_deal_fab.setImageResource(R.drawable.ic_baseline_add_24);
+                    showCheckbox = false;
+                    setView();
 
-                        }
-                    }
-                });
+                }
+            }
+        });
 
         fab_add_deal.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        if (!isAddDealFabsVisible) {
-                            showCheckbox = true;
-                            setView();
+            @Override
+            public void onClick(View view) {
+                if (!isAddDealFabsVisible) {
+                    showCheckbox = true;
+                    setView();
                           /*  fab_add_deal.show();
                             fab_discard_deal.show();
                             txt_add_deal.setVisibility(View.VISIBLE);
                             txt_discard_deal.setVisibility(View.VISIBLE);*/
-                            isAddDealFabsVisible = true;
-                          //  add_deal_fab.setImageResource(R.drawable.ic_baseline_close_white24);
+                    isAddDealFabsVisible = true;
+                    //  add_deal_fab.setImageResource(R.drawable.ic_baseline_close_white24);
 
-                        } else {
+                } else {
                           /*  fab_add_deal.hide();
                             fab_discard_deal.hide();
                             txt_add_deal.setVisibility(View.GONE);
                             txt_discard_deal.setVisibility(View.GONE);*/
-                            isAddDealFabsVisible = false;
-                            if(productcount != 0){
-                                showProductDealAlert();
-                            }else{
-                                showErrorLoading("Please select the product");
-                            }
-                           // add_deal_fab.setImageResource(R.drawable.ic_baseline_add_24);
+                    isAddDealFabsVisible = false;
+                    if(productcount != 0){
+                        showProductDealAlert();
+                    }else{
+                        showErrorLoading("Please select the product");
+                    }
+                    // add_deal_fab.setImageResource(R.drawable.ic_baseline_add_24);
 
-                        }
-                    }
-                });
+                }
+            }
+        });
         fab_discard_deal.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        showCheckbox = false;
-                        setView();
-                        fab_add_deal.hide();
-                        fab_discard_deal.hide();
-                        txt_add_deal.setVisibility(View.GONE);
-                        txt_discard_deal.setVisibility(View.GONE);
-                        isAllFabsVisible = false;
-                        add_deal_fab.setImageResource(R.drawable.ic_baseline_add_24);
-                    }
-                });
+            @Override
+            public void onClick(View view) {
+                add_deal_text.setText("Add Deal");
+                showCheckbox = false;
+                setView();
+                fab_add_deal.hide();
+                fab_discard_deal.hide();
+                txt_add_deal.setVisibility(View.GONE);
+                txt_discard_deal.setVisibility(View.GONE);
+                isAllFabsVisible = false;
+                add_deal_fab.setImageResource(R.drawable.ic_baseline_add_24);
+            }
+        });
 
 
     }
@@ -672,15 +679,15 @@ public class ManageProductsActivity extends AppCompatActivity implements View.On
                     CheckDates(getfromdate,gettodate);
                     if(isvaliddate){
                         if(productcount != 0){
-                        if(productcount == 1){
-                            if(isValidProductPrice) {
-                                apply_sing_dis_ResponseCall();
+                            if(productcount == 1){
+                                if(isValidProductPrice) {
+                                    apply_sing_dis_ResponseCall();
+                                }else{
+                                    showErrorLoading("Please enter the amount below the product price");
+                                }
                             }else{
-                                showErrorLoading("Please enter the amount below the product price");
+                                apply_multi_dis_ResponseCall();
                             }
-                        }else{
-                            apply_multi_dis_ResponseCall();
-                        }
                         }
                     }else{
                         showErrorLoading("Please select valid deal date");
@@ -846,7 +853,7 @@ public class ManageProductsActivity extends AppCompatActivity implements View.On
         return applyMultiProdDiscountRequest;
     }
 
-     @SuppressLint("LogNotTimber")
+    @SuppressLint("LogNotTimber")
     private void cal_discount_single_ResponseCall() {
         avi_indicator.setVisibility(View.VISIBLE);
         avi_indicator.smoothToShow();
@@ -868,9 +875,9 @@ public class ManageProductsActivity extends AppCompatActivity implements View.On
                             if(discountstatus){
                                 txt_discount_price.setText(response.body().getData().getDiscount()+" %");
                             }else{
-                                txt_discount_price.setText("\u20B9 "+response.body().getData().getDiscount_amount());
+                                txt_discount_price.setText("INR "+response.body().getData().getDiscount_amount());
                             }
-                            txt_cost.setText("\u20B9 " +response.body().getData().getCost());
+                            txt_cost.setText("INR " +response.body().getData().getCost());
 
                         }
 
@@ -974,10 +981,47 @@ public class ManageProductsActivity extends AppCompatActivity implements View.On
     }
     @SuppressLint("LogNotTimber")
     public void CheckDates(String d1, String d2){
-        @SuppressLint("SimpleDateFormat") SimpleDateFormat dfDate  = new SimpleDateFormat("yyyy-MM-dd");
+
+        Log.w(TAG,"start_date "+ d1);
+
+        Log.w(TAG,"end_date "+ d2);
+
+        try
+        {
+            String myFormatString = "yyyy-M-dd"; // for example
+            SimpleDateFormat df = new SimpleDateFormat(myFormatString);
+            Date date1 = df.parse(d1);
+            Date startingDate = df.parse(d2);
+
+            Log.w(TAG,"start_date_parse "+ date1);
+
+            Log.w(TAG,"end_date_parse"+ startingDate);
+
+            if (date1.after(startingDate))
+                isvaliddate = true;
+            else
+                isvaliddate = false;
+        }
+        catch (Exception e)
+        {
+
+            isvaliddate = false;
+        }
+
+     /*   @SuppressLint("SimpleDateFormat") SimpleDateFormat dfDate  = new SimpleDateFormat("yyyy-MM-dd");
+
+        Log.w(TAG,"start_date "+ d1);
+
+        Log.w(TAG,"end_date "+ d2);
+
 
         try {
             if(d1 != null && d2 != null){
+
+                Log.w(TAG,"start_date_parse "+ dfDate.parse(d1));
+
+                Log.w(TAG,"end_date_parse"+ dfDate.parse(d2));
+
                 if(Objects.requireNonNull(dfDate.parse(d1)).before(dfDate.parse(d2)))
                 {
                     isvaliddate = true;//If start date is before end date
@@ -992,7 +1036,7 @@ public class ManageProductsActivity extends AppCompatActivity implements View.On
         } catch (ParseException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
-        }
+        }*/
     }
     public void showErrorLoading(String errormesage){
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);

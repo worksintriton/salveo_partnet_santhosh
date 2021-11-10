@@ -21,13 +21,11 @@ public interface API {
     @GET("/maps/api/place/autocomplete/json")
     Call<PlacesResultsResponse> getCityResults(@Query("input") String input, @Query("key") String key);
 
-    // https://maps.googleapis.com/maps/api/geocode/json?&address=chennai&key=AIzaSyCVeEuZcqrs9phnrk1aNSpiJ57hb-V8hhE
 
 
     @GET("/maps/api/geocode/json")
     Call<AddressResultsResponse> getaddressResults(@Query("address") String input, @Query("key") String key);
 
-    //https://maps.googleapis.com/maps/api/geocode/json?latlng=11.039049521240667,78.65450095385313&key=AIzaSyCVeEuZcqrs9phnrk1aNSpiJ57hb-V8hhE
 
     @GET("/maps/api/geocode/json")
     Call<GetAddressResultResponse> getAddressResultResponseCall(@Query("latlng") String input, @Query("key") String key);
